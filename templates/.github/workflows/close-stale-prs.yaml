@@ -1,0 +1,31 @@
+# Warn and later close PRs that have had no activity for a specified amount of time.
+# This reminds us that code in most cases only provide value once merged.
+
+name: "Close Stale PRs"
+on:
+  schedule:
+    - cron: "0 9,16 * * *"
+
+jobs:
+  stale:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@5f858e3efba33a5ca4407a664cc011ad407f2008 # v10.1.0
+        with:
+          stale-pr-label: stale
+          exempt-pr-labels: never-stale,dependencies
+          stale-pr-message: |
+            This PR is marked as stale since it has been open for 30 days with no activity. 
+
+            Remove the stale label or make a comment, otherwise the PR will be closed in 7 days.
+          close-pr-message: "This PR was closed because it has been stale for 7 days with no activity."
+          days-before-issue-stale: -1
+          days-before-pr-stale: 30
+          days-before-issue-close: -1
+          days-before-pr-close: 7
+          start-date: "2023-01-12"

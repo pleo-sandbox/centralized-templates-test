@@ -1,0 +1,127 @@
+automerge: true
+
+values:
+  # Allow Kodiak to auto-update and auto-merge PRs in your repository once PRs are passing all checks via the `automerge` or `autoupdate` PR labels.
+  allowKodiakAutoMerge: true
+
+  # Make Kodiak give Renovate PRs 1 approval automatically.
+  autoApproveRenovatePrs: true
+
+  # Push a built container image to AWS ECR.
+  deploymentEnabled: true
+
+  # Environment tenant where the app will be deployed (i.e, product, tooling, data-integration etc.)
+  # See for further information on naming convention: https://sre.pleo.io/internal/environments/overview/naming-convention
+  environmentTenant: product
+
+  # Enable functional tests.
+  funcTestEnabled: true
+
+  # Github actions runner override for functional tests.
+  # That way, if needed, a different GH runner can be set per repository. See for more context: https://linear.app/pleo/issue/DEVX-4085
+  funcTestRunsOn: "blacksmith-4vcpu-ubuntu-2404"
+
+  # A custom timeout for long-running functional tests in CI.
+  functionalTestTimeOut: 20
+
+  # The JDK version of your service.
+  jdkVersion: "17"
+
+  # The Node.js version of your service.
+  nodeVersion: 22
+
+  # PostgreSQL version
+  postgresImageVersion: "11.11"
+
+  # Provision a Postgres instance for tests to run against.
+  postgresRequired: false
+
+  # Publish generated TypeScript request/response types for frontend calls to generated OpenAPI clients.
+  publishTypeScriptFrontendModels: false
+
+  # The Python version of the repository.
+  pythonVersion: "3.11"
+
+  # Whether your service should release its generated OpenAPI clients.
+  releaseOpenAPIClients: false
+
+  # Cronjob schedule to define how often Renovate should run.
+  renovateCronjobSchedule: "0 7 * * 1-5" # This is UTC -> At 08:00 CET / 09:00 CEST on every day-of-week from Monday through Friday.
+
+  # Whether your service should release its generated Node OpenAPI clients.
+  publishNodeOpenAPIClient: false
+
+  # Name of the repository the template goes to.
+  # This value is automatically set from the repository information and cannot be overriden in the repository configuration.
+  repositoryName: repository-name
+
+  # Slack channel to send deployment failure notifications to
+  deploymentFailureNotificationSlackChannel: dev-deploy-failure
+
+  # Ignore errors for Pleo API Standard adherence check
+  ignoreOpenAPIErrors: true
+
+  # Opt-Out of automatic additions to CHANGELOG.md on release, by `auto`, configured in `release.yaml`
+  generateChangelogUpdate: true
+
+  # Allows to auto-approve a Renovate PR by pleo-bot-auto-approver
+  autoApproveEnabled: true
+
+  # CodeQL runner type
+  codeQlRunsOn: "blacksmith-4vcpu-ubuntu-2404"
+
+  # CodeQL configuration file to use for scanning. By default no file is passed.
+  codeQlConfigFile: ""
+
+  # Run CodeQL analysis on the default branch.
+  codeQlRunOnDefaultBranch: true
+
+  # Set the Wiz CLI Scan Path for IaC Scanning
+  setWizCliIaCScanPath: "."
+
+  # Set the Wiz CLI Scan Path for Dependency Scanning
+  setWizCliDepsScanPath: "."
+
+  # Set the Wiz CLI Dockerfile Scan Path for Container Scanning
+  setWizCliContainerDockerfilePath: "."
+
+  # Set the Wiz CLI Scan Policy to be used for IaC Scanning
+  setWizCliIaCPolicy: "Pleo-Default-IaC-policy"
+
+  # Set the Wiz CLI Scan Policy to be used for Dependency Scanning
+  setWizCliDepsPolicy: "Pleo-Default-vulnerabilities-policy"
+
+  # Set the Wiz CLI Scan Policy to be used for Container Scanning
+  setWizCliContainerPolicy: "Pleo-Default-container-policy"
+
+  # Disable the API docs preview notification comment in PRs
+  disableApiDocsPreviewNotification: false
+
+  # Whether to run the Wiz-CLI Dependancy Scan.
+  runWizCliDepsScan: true
+
+  # Wether to run the Wiz-CLI Container/Image Scan.
+  runWizCliContainerScan: true
+
+  # Wether to run the Wiz-CLI IaC Scan.
+  runWizCliIaCScan: false
+
+  # The tool to use for OpenAPI breaking change analysis. 
+  # Options are 'oasdiff', 'openapi-changes', or 'both', set to "disabled" (or any other value) to disable
+  apiChangeAnalysisTool: "disabled" 
+
+  # Glob pattern to locate SQL migration files (to be linted with Squawk - https://github.com/sbdchd/squawk-action).
+  # This is the default value for a Maven/Gradle project using Flyway.
+  sqlMigrationFilesPattern: "**/src/main/resources/db/migration/**/*.sql"
+
+  # Node.js package manager for Copilot setup steps workflow
+  # Only used if copilotUseBunRuntime is set to 'false' AND if centralized-templates is configured to fetch copilot-setup-nodejs-steps.yaml
+  # Options: 'npm', 'yarn', 'pnpm'
+  copilotNodePackageManager: "npm"
+
+  # Set to "true" to use Bun instead of NodeJS runtime in copilot agent workflow
+  copilotUseBunRuntime: false
+
+  # Bun version for Copilot setup steps workflow (only used if copilotUseBunRuntime is set to 'true')
+  # Options: specific version (e.g., '1.3.1') or 'latest'
+  copilotBunRuntimeVersion: "latest"

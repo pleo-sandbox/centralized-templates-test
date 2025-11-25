@@ -1,0 +1,60 @@
+name: Format Kotlin
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: Format Kotlin
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    timeout-minutes: 10
+    steps:
+      # Generate temporary token for allowing CI to run on the formatted files.
+      - name: Generate temporary CI token
+        id: get-admin-token
+        uses: actions/create-github-app-token@7e473efe3cb98aa54f8d4bac15400b15fad77d94 # v2
+        with:
+          app-id: ${{ secrets.PLEO_GH_APP_TOKEN_SIGNER_APP_ID }}
+          private-key: ${{ secrets.PLEO_GH_APP_TOKEN_SIGNER_PRIVATE_KEY }}
+
+      # Checkout code with push privileges.
+      - name: Checkout code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ steps.get-admin-token.outputs.token }}
+
+      # Set up a JDK environment for building, testing and releasing.
+      - name: Set up JDK <<<jdkVersion>>>
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+        with:
+          java-version: <<<jdkVersion>>>
+          distribution: temurin
+
+      # Allow caching Gradle executions to further speed up CI/CD steps invoking Gradle.
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
+        with:
+          # Cache only updated on release.
+          cache-read-only: true
+
+      # Format code via the formatkotlin Gradle task.
+      - name: Format files
+        run: |
+          ./gradlew formatkotlin
+        env:
+          GRADLE_READ_KEY: ${{ secrets.GH_REGISTRY_GRADLE_TOKEN }}
+          JOB_RUNR_REPO_PASSWORD: ${{ secrets.JOB_RUNR_REPO_PASSWORD }}
+
+      # Add and commit any formatted files.
+      - name: Add formatted files
+        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
+        with:
+          author_name: github-actions[bot]
+          author_email: github-actions@pleo.io
+          message: Format Kotlin
+          commit: --no-verify
